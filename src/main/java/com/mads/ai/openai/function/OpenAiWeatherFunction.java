@@ -1,4 +1,4 @@
-package com.mads.ai.function;
+package com.mads.ai.openai.function;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonPropertyDescription;

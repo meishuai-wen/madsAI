@@ -1,4 +1,4 @@
-package com.mads.ai.service;
+package com.mads.ai.openai.service;
 
 import com.theokanning.openai.assistants.Assistant;
 import com.theokanning.openai.assistants.AssistantRequest;

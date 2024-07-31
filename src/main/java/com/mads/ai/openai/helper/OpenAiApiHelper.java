@@ -1,11 +1,11 @@
-package com.mads.ai.helper;
+package com.mads.ai.openai.helper;
 
 import cn.hutool.http.Header;
 import cn.hutool.http.HttpRequest;
-import com.mads.ai.model.OpenAIRequest;
-import com.mads.ai.model.OpenAIResponse;
-import com.mads.ai.model.OpenAiMediaMessage;
-import com.mads.ai.model.OpenAiMessage;
+import com.mads.ai.openai.model.OpenAIRequest;
+import com.mads.ai.openai.model.OpenAIResponse;
+import com.mads.ai.openai.model.OpenAiMediaMessage;
+import com.mads.ai.openai.model.OpenAiMessage;
 import com.mads.ai.util.JsonUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;

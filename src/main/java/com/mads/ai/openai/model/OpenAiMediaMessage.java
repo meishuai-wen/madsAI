@@ -1,4 +1,4 @@
-package com.mads.ai.model;
+package com.mads.ai.openai.model;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;

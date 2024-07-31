@@ -1,4 +1,4 @@
-package com.mads.ai.helper;
+package com.mads.ai.openai.helper;
 
 import com.azure.ai.openai.OpenAIClient;
 import com.azure.ai.openai.OpenAIClientBuilder;
