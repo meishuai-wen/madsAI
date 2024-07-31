@@ -3,7 +3,7 @@ package com.mads.ai.langchain4j;
 import com.mads.ai.langchain4j.config.ApiKeys;
 import com.mads.ai.langchain4j.model.PersonModel;
 import com.mads.ai.langchain4j.model.RecipeModel;
-import com.mads.ai.langchain4j.prompt.CreateRecipePrompt;
+import com.mads.ai.langchain4j.model.CreateRecipePrompt;
 import com.mads.ai.langchain4j.service.AssistantService;
 import com.mads.ai.langchain4j.service.ChefService;
 import com.mads.ai.langchain4j.service.PersonExtractorService;

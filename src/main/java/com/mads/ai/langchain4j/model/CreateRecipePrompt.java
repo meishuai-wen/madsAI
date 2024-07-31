@@ -1,4 +1,4 @@
-package com.mads.ai.langchain4j.prompt;
+package com.mads.ai.langchain4j.model;
 
 import dev.langchain4j.model.input.structured.StructuredPrompt;
 import lombok.Data;

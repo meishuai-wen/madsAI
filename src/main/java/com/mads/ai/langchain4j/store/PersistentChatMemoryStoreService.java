@@ -12,6 +12,9 @@ import org.springframework.stereotype.Service;
 import java.util.List;
 import java.util.Map;
 
+/**
+ * 模拟数据库存储上下文消息的方式，这里也可以换成自己的向量数据库
+ */
 @Service
 public class PersistentChatMemoryStoreService implements ChatMemoryStore  {
     private final DB db = DBMaker.fileDB("chat-memory.db").transactionEnable().make();
