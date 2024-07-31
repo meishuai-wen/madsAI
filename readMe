@@ -1,1 +1,7 @@
 个人 AI联系项目
+
+包括
+1、直接使用openAI的api方式
+2、社区提供的操作openAI的sdk方式
+3、LangChain4j方式
+4、spring AI包
