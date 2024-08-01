@@ -87,7 +87,6 @@
             <version>0.33.0</version>
         </dependency>
         <!--LangChain4J：智谱AI-->
-
         <dependency>
             <groupId>dev.langchain4j</groupId>
             <artifactId>langchain4j-zhipu-ai</artifactId>
@@ -132,6 +131,7 @@
             <artifactId>fastjson</artifactId>
             <version>1.2.76</version>
         </dependency>
+        <!--一款内存数据库-->
         <dependency>
             <groupId>org.mapdb</groupId>
             <artifactId>mapdb</artifactId>

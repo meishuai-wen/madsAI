@@ -2,10 +2,8 @@ package com.mads.ai.langchain4j;
 
 import com.mads.ai.langchain4j.config.ApiKeys;
 import com.mads.ai.langchain4j.service.AssistantService;
-import com.theokanning.openai.assistants.Assistant;
 import dev.langchain4j.data.message.AiMessage;
 import dev.langchain4j.data.message.SystemMessage;
-import dev.langchain4j.data.message.ToolExecutionResultMessage;
 import dev.langchain4j.data.message.UserMessage;
 import dev.langchain4j.model.StreamingResponseHandler;
 import dev.langchain4j.model.chat.ChatLanguageModel;
@@ -28,7 +26,7 @@ public class LangchainTest {
         System.out.println(answer);
     }
 
-    //多轮聊天，是有上下文的
+    //多轮聊天，是有上下文的（不带存储）
     public void chatMore() {
         //用户的消息
         SystemMessage systemMessage = SystemMessage.systemMessage("你是一个问答小助手");
@@ -39,7 +37,7 @@ public class LangchainTest {
         System.out.println(aiMessage1.text());
 
         //todo 猜测是函数相关，先不关注
-        ToolExecutionResultMessage toolExecutionResultMessage = ToolExecutionResultMessage.toolExecutionResultMessage("","","");
+//        ToolExecutionResultMessage toolExecutionResultMessage = ToolExecutionResultMessage.toolExecutionResultMessage("","","");
 
         Response<AiMessage> response2 = chatLanguageModel.generate(systemMessage, userMessage1, aiMessage1, UserMessage.userMessage("我叫什么"));
         AiMessage aiMessage2 = response2.content();

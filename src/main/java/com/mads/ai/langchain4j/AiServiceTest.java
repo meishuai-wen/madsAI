@@ -28,6 +28,8 @@ public class AiServiceTest {
             .timeout(Duration.ofSeconds(60))
             .build();
 
+
+
     /**
      * 从输入文本中提取有效信息封装成 Person对象
         应用场景:
@@ -35,6 +37,10 @@ public class AiServiceTest {
             对文档提取特定的数据进行业务处理
      */
     public void createPersonFromText(){
+//        AiServices.builder(PersonExtractorService.class)
+//                .chatLanguageModel(model)
+//                .moderationModel()//设置 违规处理模型，在使用@Moderate注解时为必须参数
+//                .build();
         PersonExtractorService extractor = AiServices.create(PersonExtractorService.class, model);
 
         String text = "In 1968, amidst the fading echoes of Independence Day, "
@@ -73,13 +79,21 @@ public class AiServiceTest {
     public void memoryTest() {
         AssistantService assistant = AiServices.builder(AssistantService.class)
                 .chatLanguageModel(model)
+                /**
+                 * 告诉框架按照id方式去找历史消息，这样就可以解决因为淘汰机制造成上下文理解偏差的问题
+                 *  现有历史消息两条，消息淘汰数量为1
+                 *      id 1 = shuaishuai
+                 *      id 2 = meimei
+                 *  现在问：我是谁，如果不指定id，llm会认为我是meimei,如果指定了id,LLM就会以此来标示我是谁了
+                 *  这个可以用来做不同App的管理员账号，比如 three="Three Team", monkey="逗比猴子"
+                 */
                 .chatMemoryProvider(memoryId -> MessageWindowChatMemory.withMaxMessages(10))
                 .build();
 
-        System.out.println(assistant.chat(1, "Hello, my name is Klaus"));
+        System.out.println(assistant.chat(1, "Hello, my name is shuaishuai"));
         // Hi Klaus! How can I assist you today?
 
-        System.out.println(assistant.chat(2, "Hello, my name is Francine"));
+        System.out.println(assistant.chat(2, "Hello, my name is meimei"));
         // Hello Francine! How can I assist you today?
 
         System.out.println(assistant.chat(1, "What is my name?"));
