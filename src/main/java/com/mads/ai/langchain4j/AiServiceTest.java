@@ -1,21 +1,33 @@
 package com.mads.ai.langchain4j;
 
 import com.mads.ai.langchain4j.config.ApiKeys;
+import com.mads.ai.langchain4j.model.CreateRecipePrompt;
 import com.mads.ai.langchain4j.model.PersonModel;
 import com.mads.ai.langchain4j.model.RecipeModel;
-import com.mads.ai.langchain4j.model.CreateRecipePrompt;
 import com.mads.ai.langchain4j.service.AssistantService;
 import com.mads.ai.langchain4j.service.ChefService;
 import com.mads.ai.langchain4j.service.PersonExtractorService;
 import com.mads.ai.langchain4j.service.TextTranslatorService;
 import com.mads.ai.langchain4j.tool.CalculatorTool;
+import com.mads.ai.langchain4j.tool.DateTool;
+import dev.langchain4j.agent.tool.ToolExecutionRequest;
+import dev.langchain4j.agent.tool.ToolSpecification;
+import dev.langchain4j.agent.tool.ToolSpecifications;
+import dev.langchain4j.data.message.AiMessage;
+import dev.langchain4j.data.message.ToolExecutionResultMessage;
+import dev.langchain4j.data.message.UserMessage;
 import dev.langchain4j.memory.chat.MessageWindowChatMemory;
 import dev.langchain4j.model.chat.ChatLanguageModel;
 import dev.langchain4j.model.openai.OpenAiChatModel;
+import dev.langchain4j.model.output.Response;
+import dev.langchain4j.model.zhipu.ZhipuAiChatModel;
 import dev.langchain4j.service.AiServices;
 
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
 import java.time.Duration;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 
 public class AiServiceTest {
@@ -28,15 +40,18 @@ public class AiServiceTest {
             .timeout(Duration.ofSeconds(60))
             .build();
 
+    static ChatLanguageModel zipuModel = ZhipuAiChatModel.builder()
+            .apiKey("48ee4de20f89229f0b2a6e8244b0c7c6.PK0NRlPAupA4imAz")
+            .build();
 
 
     /**
      * 从输入文本中提取有效信息封装成 Person对象
-        应用场景:
-            可以对用户模糊描述提取有用的信息, 进行精确的业务处理
-            对文档提取特定的数据进行业务处理
+     * 应用场景:
+     * 可以对用户模糊描述提取有用的信息, 进行精确的业务处理
+     * 对文档提取特定的数据进行业务处理
      */
-    public void createPersonFromText(){
+    public void createPersonFromText() {
 //        AiServices.builder(PersonExtractorService.class)
 //                .chatLanguageModel(model)
 //                .moderationModel()//设置 违规处理模型，在使用@Moderate注解时为必须参数
@@ -103,11 +118,14 @@ public class AiServiceTest {
     }
 
     /**
-     * 计算器，function的调用
+     * function
+     * 计算器
+     * openAI测试版本不支持function功能
      */
-    public void calculator() {
+    public void calculatorTool() {
         AssistantService assistant = AiServices.builder(AssistantService.class)
-                .chatLanguageModel(model)
+                //openAI 测试版本不支持function功能，所以这里使用了智谱的
+                .chatLanguageModel(zipuModel)
                 .tools(new CalculatorTool())
                 .chatMemory(MessageWindowChatMemory.withMaxMessages(10))
                 .build();
@@ -117,12 +135,53 @@ public class AiServiceTest {
 
         String answer = assistant.chatCalculator(question);
 
-        System.out.println(answer);
+        System.out.println("-1-" + answer);
+
+        AssistantService assistant1 = AiServices.builder(AssistantService.class)
+                //openAI 测试版本不支持function功能，所以这里使用了智谱的
+                .chatLanguageModel(zipuModel)
+                .tools(new DateTool())
+                .build();
+
+        AiMessage answer1 = assistant1.chat1("What's the date today");
+        System.out.println("-2-" + answer1);
     }
+
+    /**
+     * function
+     * 直接使用model底层的mode.generate(messages)方法， 这个可以方便理解整体的流程，时机开发中使用上面的即可
+     *
+     * @throws NoSuchMethodException
+     */
+    public void modelToolTest() throws NoSuchMethodException, InvocationTargetException, IllegalAccessException {
+        //单独指定一个方法, 需要手动封装ToolSpecification
+        ToolSpecification nowTimeTool = ToolSpecifications.toolSpecificationFrom(DateTool.class.getMethod("nowTime"));
+
+        UserMessage userMessage = UserMessage.userMessage("What's the date today");
+
+        Response<AiMessage> generate = zipuModel.generate(Collections.singletonList(userMessage), nowTimeTool);
+        AiMessage content = generate.content();
+        System.out.println("-1-"+content);
+
+        if(content.hasToolExecutionRequests()) {
+            for (ToolExecutionRequest toolExecutionRequest : content.toolExecutionRequests()) {
+                String methodName = toolExecutionRequest.name();
+                //注意：如果使用下面方式调用，工具方法要是 static修饰，如果使用注入的方式则没事
+                Method method = DateTool.class.getMethod(methodName);
+                String nowTimeResult = (String)method.invoke(null);
+
+                ToolExecutionResultMessage toolResultMessage = ToolExecutionResultMessage.from(toolExecutionRequest.id(), methodName, nowTimeResult);
+                Response<AiMessage> generate1 = zipuModel.generate(userMessage, content, toolResultMessage);
+                System.out.println("-finial-"+generate1.content().text());
+            }
+        }
+    }
+
 
     /**
      * 注解 @StructuredPrompt("")
      */
+
     public void chefTest() {
         ChefService chef = AiServices.create(ChefService.class, model);
 
@@ -138,8 +197,9 @@ public class AiServiceTest {
         System.out.println(anotherRecipe);
     }
 
-    public static void main(String[] args) {
-        new AiServiceTest().chefTest();
+
+    public static void main(String[] args) throws NoSuchMethodException, InvocationTargetException, IllegalAccessException {
+        new AiServiceTest().modelToolTest();
     }
 
 }
