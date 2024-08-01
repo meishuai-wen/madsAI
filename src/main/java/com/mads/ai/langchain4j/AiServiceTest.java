@@ -177,7 +177,6 @@ public class AiServiceTest {
         }
     }
 
-
     /**
      * 注解 @StructuredPrompt("")
      */
@@ -197,9 +196,8 @@ public class AiServiceTest {
         System.out.println(anotherRecipe);
     }
 
-
     public static void main(String[] args) throws NoSuchMethodException, InvocationTargetException, IllegalAccessException {
-        new AiServiceTest().modelToolTest();
+        new AiServiceTest().chefTest();
     }
 
 }

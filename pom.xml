@@ -86,12 +86,31 @@
             <artifactId>langchain4j-document-parser-apache-tika</artifactId>
             <version>0.33.0</version>
         </dependency>
+        <!--LangChain4J：本地向量库-->
+        <dependency>
+            <groupId>dev.langchain4j</groupId>
+            <artifactId>langchain4j-embeddings-all-minilm-l6-v2</artifactId>
+            <version>0.33.0</version>
+        </dependency>
+        <!--LangChain4J：redis向量存储-->
+        <dependency>
+            <groupId>dev.langchain4j</groupId>
+            <artifactId>langchain4j-redis</artifactId>
+            <version>0.33.0</version>
+        </dependency>
+        <dependency>
+            <groupId>com.redis.testcontainers</groupId>
+            <artifactId>testcontainers-redis</artifactId>
+            <version>1.6.4</version>
+        </dependency>
+
         <!--LangChain4J：智谱AI-->
         <dependency>
             <groupId>dev.langchain4j</groupId>
             <artifactId>langchain4j-zhipu-ai</artifactId>
             <version>0.33.0</version>
         </dependency>
+
 
         <dependency>
             <groupId>org.springframework.boot</groupId>

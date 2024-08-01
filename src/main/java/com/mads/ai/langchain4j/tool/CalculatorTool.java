@@ -1,5 +1,6 @@
 package com.mads.ai.langchain4j.tool;
 
+import dev.langchain4j.agent.tool.P;
 import dev.langchain4j.agent.tool.Tool;
 
 /**
@@ -9,7 +10,7 @@ public class CalculatorTool {
 
     //统计字符长度
     @Tool("Calculates the length of a string")
-    public static int stringLength(String s) {
+    public static int stringLength(@P("user content") String s) {
         System.out.println("Called stringLength() with s='" + s + "'");
         return s.length();
     }
