@@ -73,7 +73,7 @@ public class DocumentLoaderTest {
         log.info("{}: {} ...", document.metadata("file_name"), document.text().trim().substring(0, 50));
     }
 
-    private static Path toPath(String fileName) {
+    public static Path toPath(String fileName) {
         try {
             URL fileUrl = DocumentLoaderTest.class.getResource(fileName);
             return Paths.get(fileUrl.toURI());

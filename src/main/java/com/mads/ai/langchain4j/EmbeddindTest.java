@@ -52,13 +52,14 @@ public class EmbeddindTest {
                 .dimension(1536)//向量维度，写错了会写不进去
                 .build();
 
+        //这个小向量库，同样内容 每次出来的结果都特么不一样，没法用。。
 //        EmbeddingModel embeddingModel = new AllMiniLmL6V2EmbeddingModel();
 
         //存入 redis
-        embeddingStore.add(embeddingModel.embed("I like football.").content());
+        embeddingStore.add(embeddingModel.embed("I like football.").content(), TextSegment.from("I like football."));
 
 //        TextSegment segment2 = TextSegment.from("The weather is good today.");
-        embeddingStore.add(embeddingModel.embed("The weather is good today.").content());
+        embeddingStore.add(embeddingModel.embed("The weather is good today.").content(), TextSegment.from("The weather is good today."));
 
         Embedding queryEmbedding = embeddingModel.embed("The weather is good today.").content();
 

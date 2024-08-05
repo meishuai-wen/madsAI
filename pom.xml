@@ -86,7 +86,7 @@
             <artifactId>langchain4j-document-parser-apache-tika</artifactId>
             <version>0.33.0</version>
         </dependency>
-        <!--LangChain4J：本地向量库-->
+        <!--LangChain4J：本地向量库，这个小向量库，同样内容 每次出来的结果都特么不一样，业务根本没法用。。-->
         <dependency>
             <groupId>dev.langchain4j</groupId>
             <artifactId>langchain4j-embeddings-all-minilm-l6-v2</artifactId>

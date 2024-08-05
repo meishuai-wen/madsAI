@@ -197,7 +197,7 @@ public class AiServiceTest {
     }
 
     public static void main(String[] args) throws NoSuchMethodException, InvocationTargetException, IllegalAccessException {
-        new AiServiceTest().chefTest();
+        new AiServiceTest().calculatorTool();
     }
 
 }
