@@ -123,7 +123,7 @@ public class OpenAiSDKHelper {
     /***
      * 文字审核
      */
-    @PostConstruct
+//    @PostConstruct
     public void moderationsTest() {
         ModerationRequest moderationRequest = ModerationRequest.builder()
                 .model("text-moderation-latest")
