@@ -3,8 +3,7 @@ package com.mads.ai.langchain4j;
 import com.mads.ai.langchain4j.config.ApiKeys;
 import dev.langchain4j.data.embedding.Embedding;
 import dev.langchain4j.data.segment.TextSegment;
-import dev.langchain4j.model.embedding.EmbeddingModel;
-import dev.langchain4j.model.embedding.onnx.allminilml6v2.AllMiniLmL6V2EmbeddingModel;
+import dev.langchain4j.model.ollama.OllamaEmbeddingModel;
 import dev.langchain4j.model.openai.OpenAiEmbeddingModel;
 import dev.langchain4j.model.output.Response;
 import dev.langchain4j.store.embedding.EmbeddingMatch;
@@ -18,9 +17,23 @@ import java.util.List;
  */
 public class EmbeddindTest {
     //第一种：这种是使用三方平台，请求接口的方式得到
-    OpenAiEmbeddingModel embeddingModel = OpenAiEmbeddingModel.builder()
+    static OpenAiEmbeddingModel embeddingModel = OpenAiEmbeddingModel.builder()
             .apiKey(ApiKeys.OPENAI_API_KEY)
             .build();
+
+    //单独部署的向量化模型
+    static OllamaEmbeddingModel embeddingOllamaModel = OllamaEmbeddingModel.builder()
+            .modelName("nomic-embed-text:latest")
+            .baseUrl("http://localhost:11434")
+            .build();
+
+    /**
+     * 测试本地部署的向量模型
+     */
+    public void embedLocalModel() {
+        System.out.println(embeddingOllamaModel.embed("who are you"));
+    }
+
     /**
      * 第二种：本地向量库，小模型，计算的量小，本地玩可以，生产上不能用，数据会不准
      * <dependency>
@@ -75,6 +88,6 @@ public class EmbeddindTest {
 
 
     public static void main(String[] args) {
-        new EmbeddindTest().redisStackStory();
+        new EmbeddindTest().embedLocalModel();
     }
 }

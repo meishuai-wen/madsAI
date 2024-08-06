@@ -18,6 +18,7 @@ import dev.langchain4j.data.message.ToolExecutionResultMessage;
 import dev.langchain4j.data.message.UserMessage;
 import dev.langchain4j.memory.chat.MessageWindowChatMemory;
 import dev.langchain4j.model.chat.ChatLanguageModel;
+import dev.langchain4j.model.ollama.OllamaChatModel;
 import dev.langchain4j.model.openai.OpenAiChatModel;
 import dev.langchain4j.model.output.Response;
 import dev.langchain4j.model.zhipu.ZhipuAiChatModel;
@@ -32,6 +33,7 @@ import java.util.List;
 
 public class AiServiceTest {
 
+    //openAI的模型
     static ChatLanguageModel model = OpenAiChatModel.builder()
 //            .baseUrl(ApiKeys.BASE_URL)
             .apiKey(ApiKeys.OPENAI_API_KEY)
@@ -40,9 +42,23 @@ public class AiServiceTest {
             .timeout(Duration.ofSeconds(60))
             .build();
 
+    //智谱ai的模型
     static ChatLanguageModel zipuModel = ZhipuAiChatModel.builder()
             .apiKey("48ee4de20f89229f0b2a6e8244b0c7c6.PK0NRlPAupA4imAz")
             .build();
+
+    //OLLama模型的
+    static ChatLanguageModel ollamaModel = OllamaChatModel.builder()
+            .modelName("llama3.1:8b")
+            .baseUrl("http://localhost:11434")
+            .build();
+
+    public void testLocalOllamaModel() {
+        UserMessage userMessage = UserMessage.userMessage("Who are you?");
+
+        Response<AiMessage> generate = ollamaModel.generate(userMessage);
+        System.out.println(generate.content());
+    }
 
 
     /**
@@ -197,7 +213,7 @@ public class AiServiceTest {
     }
 
     public static void main(String[] args) throws NoSuchMethodException, InvocationTargetException, IllegalAccessException {
-        new AiServiceTest().calculatorTool();
+        new AiServiceTest().testLocalOllamaModel();
     }
 
 }
