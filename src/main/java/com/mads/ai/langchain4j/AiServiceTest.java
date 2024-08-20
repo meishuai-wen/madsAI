@@ -111,7 +111,7 @@ public class AiServiceTest {
         AssistantService assistant = AiServices.builder(AssistantService.class)
                 .chatLanguageModel(model)
                 /**
-                 * 告诉框架按照id方式去找历史消息，这样就可以解决因为淘汰机制造成上下文理解偏差的问题
+                 * 告诉框架按照id方式去找历史消息,比如10个人有10个聊天窗口，每个窗口对应一个ID，这样就可以解决因为淘汰机制造成上下文理解偏差的问题
                  *  现有历史消息两条，消息淘汰数量为1
                  *      id 1 = shuaishuai
                  *      id 2 = meimei

@@ -34,6 +34,7 @@ import dev.langchain4j.rag.query.transformer.QueryTransformer;
 import dev.langchain4j.service.AiServices;
 import dev.langchain4j.store.embedding.EmbeddingMatch;
 import dev.langchain4j.store.embedding.EmbeddingStore;
+import dev.langchain4j.store.embedding.EmbeddingStoreIngestor;
 import dev.langchain4j.store.embedding.redis.RedisEmbeddingStore;
 import lombok.extern.slf4j.Slf4j;
 
@@ -133,10 +134,13 @@ public class RagDemoTest {
 //        Response<AiMessage> aiMessageResponse = chatLanguageModel.generate(userMessage);
 //        System.out.println(aiMessageResponse.content());
 
+        //内容增强器，
         ContentAggregator contentAggregator = new DefaultContentAggregator();
 
-        QueryRouter queryRouter = new DefaultQueryRouter();
+        //内容检路由器器，可以理解为管理多个数据源，比如：即要查订单表，又要查财产表，根据用户问题自动去找不同的数据源获取数据
+        QueryRouter queryRouter = new DefaultQueryRouter(contentRetriever);
 
+        //可以将一个问题 拆解成多个
         QueryTransformer queryTransformer = new ExpandingQueryTransformer(chatLanguageModel);
 
 
@@ -187,6 +191,7 @@ public class RagDemoTest {
 
 
     /***
+     * 第一种方式，使用原生方法
      * 生成向量数据
      */
     public static void textToStore() {
@@ -209,6 +214,25 @@ public class RagDemoTest {
 
         //将向量数据和文本对应 保存进数据库
         embeddingStore.addAll(embedList, textSegments);
+    }
+    /***
+     * 第二种方式，使用管道方法
+     * 生成向量数据
+     */
+    public static void textToStoreNew() {
+        //第一步导入文件
+        Path documentPath = DocumentLoaderTest.toPath("/meituan-qa.txt");
+        log.info("Loading single document: {}", documentPath);
+        Document document = loadDocument(documentPath, new ApacheTikaDocumentParser());
+//        System.out.println(document);
+
+        EmbeddingStoreIngestor ingestor = EmbeddingStoreIngestor.builder()
+                .embeddingModel(embeddingModel)
+                .embeddingStore(embeddingStore)
+                .documentSplitter(new CustomerServiceDocumentSplitter())
+                .build();
+
+        ingestor.ingest(document);
     }
 
 }
